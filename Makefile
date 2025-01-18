@@ -12,5 +12,13 @@ list:
 add:
 	$(DOCKER_RUN) python main.py add
 
+update:
+	$(DOCKER_RUN) python main.py update
+
 shell:
 	$(DOCKER_RUN) zsh
+
+clean:
+	docker rmi -f subito_bot
+
+rebuild: clean build

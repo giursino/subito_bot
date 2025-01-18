@@ -18,6 +18,7 @@ This project helps to speed-up insertion and filling of advertisements on the we
 ## Usage
 * run `make list` to see the items to publish to subito.it
 * run `make add` to add items to the list to publish to subito.it
+* run `make update` to update items and images on the list
 * run `make publish` to publish the items list to subito.it 
 
 ## Development

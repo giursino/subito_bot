@@ -1,19 +1,22 @@
-from selenium import webdriver
-from selenium.webdriver.firefox.options import Options as FirefoxOptions
-from tkinter.filedialog import askopenfilenames
 import json
 import os
 import sys
 import shutil
 import time
+import random
+import string
+import traceback
+from selenium import webdriver
+from selenium.webdriver.firefox.options import Options as FirefoxOptions
+from tkinter.filedialog import askopenfilenames
+from PIL import Image, ImageDraw, ImageFont
 
 from utils import *
-import traceback
 
 filepath_items = r'resources/items.json'
 filepath_template = r'resources/template.json'
 
-def publish():
+def publish() -> None:
     with open(filepath_items) as f:
         items = json.load(f)
     
@@ -144,11 +147,69 @@ def list_advs():
 
     for idx, item in enumerate(items):
         print(f'{idx :<3}: {item["id"]}')
-    
+
+def update_advs():
+    with open(filepath_items) as f:
+        items = json.load(f)
+
+    def generate_random_string(length=6):
+        letters_and_digits = string.ascii_uppercase + string.digits
+        return ''.join(random.choice(letters_and_digits) for i in range(length))
+
+    timestr = time.strftime("%Y%m%d%H%M%S")
+
+    for item in items:
+        # Trova il suffisso esistente nel titolo e nella descrizione
+        existing_suffix = None
+        if ' - ' in item['titolo']:
+            existing_suffix = item['titolo'].split(' - ')[-1]
+
+        # Genera un nuovo suffisso
+        suffix = generate_random_string()
+
+        # Aggiorna il titolo e la descrizione con il suffisso
+        item['titolo'] = f"{item['titolo'].split(' - ')[0]} - {suffix}"
+        item['descrizione'] = f"{item['descrizione'].split(' - ')[0]} - {suffix}"
+
+
+        # Aggiorna le immagini con il suffisso esistente o nuovo
+        for img_path in item['immagini']:
+            
+            original_img_file = os.path.join(os.path.dirname(img_path), f"original_{os.path.basename(img_path)}")
+            
+            if not existing_suffix: shutil.copyfile(img_path, original_img_file)
+
+            # Aggiungi il suffisso all'immagine e salvala
+            add_text_to_image(original_img_file, img_path, suffix)
+
+    # Backup del vecchio file items
+    backup_items_file = os.path.join(os.path.dirname(filepath_items), f"{timestr}_{os.path.basename(filepath_items)}")
+    shutil.copyfile(filepath_items, backup_items_file)
+
+    # Sovrascrivi il file items
+    with open(filepath_items, 'w') as f:
+        json.dump(items, f, indent=2)
+
+
+def add_text_to_image(input_image_path, output_image_path, text):
+    image = Image.open(input_image_path)
+    draw = ImageDraw.Draw(image)
+    font = ImageFont.load_default()
+    textbbox = draw.textbbox((0, 0), text, font=font)
+    textwidth = textbbox[2] - textbbox[0]
+    textheight = textbbox[3] - textbbox[1]
+    width, height = image.size
+    x = width - textwidth - 10
+    y = height - textheight - 10
+    draw.text((x, y), text, font=font, fill=(0, 0, 0))
+    image.save(output_image_path)
+
 if __name__ == '__main__':
     if len(sys.argv) > 1 and sys.argv[1].lower() == 'add':
         create_new_adv()
     elif len(sys.argv) > 1 and sys.argv[1].lower() == 'list':
         list_advs()
+    elif len(sys.argv) > 1 and sys.argv[1].lower() == 'update':
+        update_advs()
     else:
         publish()
