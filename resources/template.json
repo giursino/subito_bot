@@ -1,18 +1,18 @@
 {
     "id": "",
-    "categoria": 39,
-    "tipologia": 1,
+    "categoria": 0,
+    "tipologia": 0,
     "immagini": [],
-    "tipo_di_annuncio": "Vendita",
+    "tipo_di_annuncio": "",
     "titolo": "",
     "descrizione": "",
-    "condizione": "Ottimo",
+    "condizione": "",
     "comune": "",
     "prezzo": "",
-    "spedizione": "GestitaDaTe",
-    "dimensioni": "Maxi",
-    "costi_di_spedizione": "20",
+    "spedizione": "",
+    "dimensioni": "",
+    "costi_di_spedizione": "",
     "telefono": "",
     "nascondi_numero": true,
-    "inserzionista": "Privato"
+    "inserzionista": ""
 }

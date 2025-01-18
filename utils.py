@@ -133,9 +133,19 @@ GUI = {
     'inserzionista_Privato':    lambda d: d.find_elements_by_xpath('//label[text()="Privato"]')[0],
     'inserzionista_Azienda':    lambda d: d.find_elements_by_xpath('//label[text()="Azienda"]')[0],
     'continua':                 lambda d: d.find_elements_by_xpath('//*[@id="__next"]/div/main/div[2]/form/section/button')[0],
+    'fascia_di_eta':            lambda d: d.find_elements_by_xpath('//body/div[@id="__next"]/div[@class="Layout_layout__fOhwR"]/main[@class="Layout_main__Ybyix"]/div[@class="Form_form-wrapper__Ue0H5"]/form[@aria-label="form"]/div[@class="Form_inputs-wrapper__1fBgX"]/section[7]/div[2]/div[1]/div[1]/div[1]/div[1]')[0],
+    'fascia_di_eta_0_12_mesi':  lambda d: d.find_elements_by_xpath('//*[@id="childrenAge__option--0"]')[0],
+    'fascia_di_eta_1_3_anni':   lambda d: d.find_elements_by_xpath('//*[@id="childrenAge__option--1"]')[0],
+    'fascia_di_eta_3_6_anni':   lambda d: d.find_elements_by_xpath('//*[@id="childrenAge__option--2"]')[0],
+    'fascia_di_eta_6_12_anni':  lambda d: d.find_elements_by_xpath('//*[@id="childrenAge__option--3"]')[0],
+    'fascia_di_eta_altro':      lambda d: d.find_elements_by_xpath('//*[@id="childrenAge__option--4"]')[0],
 
     # PAGE2
-    'pubblica_annuncio':        lambda d: d.find_elements_by_xpath('//span[text()="Pubblica annuncio"]')[0],
+    'pubblica_annuncio':        lambda d: d.find_elements_by_xpath('//button[normalize-space()="Pubblica annuncio"]')[0],
+
+    # PAGE3
+    'page3_continua':           lambda d: d.find_elements_by_xpath('//button[normalize-space()="Continua"]')[0],
+
 }
 
 def get_gui(driver, name, retry=10):
@@ -180,6 +190,11 @@ def page1(driver, data):
     type_text(driver, 'descrizione', data['descrizione'])
     get_gui(driver, 'condizione').click()
     get_gui(driver, f'condizione_{data["condizione"]}').click()
+
+    if 'fascia_di_eta' in data:
+        get_gui(driver, 'fascia_di_eta').click()
+        get_gui(driver, f'fascia_di_eta_{data["fascia_di_eta"]}').click()
+
     type_text(driver, 'comune', data['comune'])
     get_gui(driver, 'comune').send_keys(Keys.RETURN)
 
@@ -208,3 +223,6 @@ def page1(driver, data):
 
 def page2(driver):
     get_gui(driver, 'pubblica_annuncio').click()
+
+def page3(driver):
+    get_gui(driver, 'page3_continua').click()

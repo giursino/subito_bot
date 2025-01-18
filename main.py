@@ -1,5 +1,5 @@
 from selenium import webdriver
-import chromedriver_autoinstaller
+from selenium.webdriver.firefox.options import Options as FirefoxOptions
 from tkinter.filedialog import askopenfilenames
 import json
 import os
@@ -8,28 +8,41 @@ import shutil
 import time
 
 from utils import *
+import traceback
 
-filepath_items = r'resources\items.json'
-filepath_template = r'resources\template.json'
+filepath_items = r'resources/items.json'
+filepath_template = r'resources/template.json'
 
 def publish():
     with open(filepath_items) as f:
         items = json.load(f)
     
-    chromedriver_autoinstaller.install()
-    driver = webdriver.Chrome()
+    # Configure Firefox options
+    firefox_options = FirefoxOptions()
+    firefox_options.add_argument("--no-sandbox")
+    user_data_dir = f"/tmp/firefox_user_data_{int(time.time())}"
+    firefox_options.set_preference("profile", user_data_dir)
+    firefox_options.set_preference("browser.in-content.dark-mode", True) 
+    driver = webdriver.Firefox(firefox_options=firefox_options)
     driver.maximize_window()
     driver.delete_all_cookies()
 
     cwd = os.getcwd()
     login(driver)
     input('continue?')
-    for data in items:
-        data['immagini'] = [os.path.join(cwd, p) for p in data['immagini']]
-        page1(driver, data)
-        page2(driver)
 
-    sleep(5)
+    for data in items:
+      try:
+          data['immagini'] = [os.path.join(cwd, p) for p in data['immagini']]
+          page1(driver, data)
+          page2(driver)
+          page3(driver)
+      except Exception as e:
+          traceback.print_exc()
+          input('continue with next item?')
+
+    time.sleep(5)
+    input('exit?')
     driver.quit()
 
 def create_new_adv():
@@ -76,6 +89,11 @@ def create_new_adv():
                     print('OPTIONS:', '\n'.join([f'{id:<5}: {t}' for id, t in enumerate(options)]), sep='\n')
                     value = int(input(f'{key}? '))
                     value = options[value]
+                elif key == 'fascia_di_eta':
+                    options = ['0_12_mesi', '1_3_anni', '3_6_anni', '6_12_anni', 'altro']
+                    print('OPTIONS:', '\n'.join([f'{id:<5}: {t}' for id, t in enumerate(options)]), sep='\n')
+                    value = int(input(f'{key}? '))
+                    value = options[value]
                 elif key == 'spedizione':
                     options = ['Nessuna', 'TuttoSubito', 'GestitaDaTe']
                     print('OPTIONS:', '\n'.join([f'{id:<5}: {t}' for id, t in enumerate(options)]), sep='\n')
@@ -107,7 +125,7 @@ def create_new_adv():
             except Exception as e:
                 print(e)
 
-    # remove duplated ids
+    # remove duplicated ids
     items = [x for x in items if x['id'] != template['id']]
     items.append(template)
 
@@ -125,7 +143,7 @@ def list_advs():
         items = json.load(f)
 
     for idx, item in enumerate(items):
-        print(f'{idx :<3}: {item['id']}')
+        print(f'{idx :<3}: {item["id"]}')
     
 if __name__ == '__main__':
     if len(sys.argv) > 1 and sys.argv[1].lower() == 'add':

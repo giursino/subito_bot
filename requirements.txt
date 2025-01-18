@@ -1,2 +1,3 @@
-chromedriver-autoinstaller==0.6.4
+#chromedriver-autoinstaller==0.6.4 # not required because switched to firefox
 selenium==3.6.0
+#tkinter==8.6 # not required if installed by default
