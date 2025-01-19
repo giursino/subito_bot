@@ -192,17 +192,44 @@ def update_advs():
 
 
 def add_text_to_image(input_image_path, output_image_path, text):
-    image = Image.open(input_image_path)
-    draw = ImageDraw.Draw(image)
-    font = ImageFont.load_default()
+  image = Image.open(input_image_path).convert("RGBA")
+  txt = Image.new("RGBA", image.size, (255, 255, 255, 0))
+
+  draw = ImageDraw.Draw(txt)
+  font = ImageFont.truetype("DejaVuSans-Bold", 32)
+  textbbox = draw.textbbox((0, 0), text, font=font)
+  textwidth = textbbox[2] - textbbox[0]
+  textheight = textbbox[3] - textbbox[1]
+  width, height = image.size
+  # Ensure the textbox is 80% of the image size
+  max_textwidth = width * 0.8
+  max_textheight = height * 0.8
+
+  while (textwidth > max_textwidth or textheight > max_textheight) and font.size > 12:
+    font = ImageFont.truetype("DejaVuSans-Bold", font.size - 1)
     textbbox = draw.textbbox((0, 0), text, font=font)
     textwidth = textbbox[2] - textbbox[0]
     textheight = textbbox[3] - textbbox[1]
-    width, height = image.size
-    x = width - textwidth - 10
-    y = height - textheight - 10
-    draw.text((x, y), text, font=font, fill=(0, 0, 0))
-    image.save(output_image_path)
+
+  # Randomize the position ensuring the text does not go out of the image
+  # and is either at the top or bottom of the image, not in the center 80%
+  y_positions = list(range(0, int(height * 0.20))) + list(range(int(height * 0.80), height - textheight))
+  x = random.randint(0, width - textwidth)
+  y = random.choice(y_positions)
+
+  # Draw the text with a shadow (emboss effect)
+  shadow_color = (0, 0, 0, 128)
+  draw.text((x + 2, y + 2), text, font=font, fill=shadow_color)
+
+  # Draw the text with semi-transparent fill
+  text_color = (255, 255, 255, 128)
+  draw.text((x, y), text, font=font, fill=text_color)
+
+  watermarked = Image.alpha_composite(image, txt)
+  watermarked = watermarked.convert("RGB")
+
+  # Save the image in JPEG format
+  watermarked.save(output_image_path, format='JPEG')
 
 if __name__ == '__main__':
     if len(sys.argv) > 1 and sys.argv[1].lower() == 'add':
