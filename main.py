@@ -146,7 +146,7 @@ def list_advs():
         items = json.load(f)
 
     for idx, item in enumerate(items):
-        print(f'{idx :<3}: {item["id"]}')
+        print(f'{idx :<3}: [{item["id"]}] {item["titolo"]}')
 
 def update_advs():
     with open(filepath_items) as f:
