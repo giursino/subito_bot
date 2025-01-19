@@ -12,7 +12,7 @@ This project helps to speed-up insertion and filling of advertisements on the we
 * Make
 
 ## Setup
-* rename `credentials.json.template` file to `credentials.json` and update it with correct credentials
+* update `resources/credentials.json` with correct credentials
 * run `make build` to build the docker image
 
 ## Usage

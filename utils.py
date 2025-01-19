@@ -101,6 +101,7 @@ TYPES = {
 GUI = {
     # LOGIN
     'accetta':                lambda d: d.find_element(By.ID, 'didomi-notice-agree-button'),
+    'non_accettare':          lambda d: d.find_element(By.CLASS_NAME, 'didomi-continue-without-agreeing'),
     'email':                  lambda d: d.find_element(By.ID, 'username'),
     'password':               lambda d: d.find_element(By.ID, 'password'),
     'accedi':                 lambda d: d.find_elements(By.XPATH, '//button[@type="submit"]')[0],
@@ -183,6 +184,7 @@ def login(driver):
 
       # Check if login was successful by looking for a specific element
       if get_gui(driver, 'i_tuoi_annunci'):
+        print(f"Login successful with cookies")
         return
       else:
         first_access = False
@@ -194,14 +196,17 @@ def login(driver):
       credentials = json.load(f)
 
     driver.get('https://areariservata.subito.it/login_form')
+    
+    # Answer to cookies policy
     if first_access:
-      get_gui(driver, 'accetta').click()
+      get_gui(driver, 'non_accettare').click()
+
     type_text(driver, 'email', credentials['EMAIL'])
     type_text(driver, 'password', credentials['PASSWORD'])
     get_gui(driver, 'accedi').click()
-
-    sleep(3)
-
+    sleep(1)
+    print(f"Login successful with credentials")
+    
     # Save session cookies
     print(f"Saving cookies to {cookie_file}")
     cookies = driver.get_cookies()
