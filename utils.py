@@ -168,16 +168,45 @@ def type_text(driver, name, text):
         sleep(1)
 
 def login(driver):
+    # Load session cookie if it exists
+    cookie_file = r'resources/cookie.json'
+    credentials_file = r'resources/credentials.json'
+    
+    first_access = True
+    try:
+      with open(cookie_file, 'r') as f:
+        cookies = json.load(f)
+        driver.get('https://areariservata.subito.it/login_form')
+        for cookie in cookies:
+          driver.add_cookie(cookie)
+        driver.refresh()
 
-    # read credentials
-    with open('credentials.json', 'r') as f:
-        credentials = json.load(f)
+      # Check if login was successful by looking for a specific element
+      if get_gui(driver, 'i_tuoi_annunci'):
+        return
+      else:
+        first_access = False
+    except Exception as e:
+      print(f"Failed to load cookies: {e}")
+
+    # If cookies are not present or login failed, proceed with normal login
+    with open(credentials_file, 'r') as f:
+      credentials = json.load(f)
 
     driver.get('https://areariservata.subito.it/login_form')
-    get_gui(driver, 'accetta').click()
+    if first_access:
+      get_gui(driver, 'accetta').click()
     type_text(driver, 'email', credentials['EMAIL'])
     type_text(driver, 'password', credentials['PASSWORD'])
     get_gui(driver, 'accedi').click()
+
+    sleep(3)
+
+    # Save session cookies
+    print(f"Saving cookies to {cookie_file}")
+    cookies = driver.get_cookies()
+    with open(cookie_file, 'w') as f:
+      json.dump(cookies, f)
 
 def page1(driver, data):
     get_gui(driver, 'i_tuoi_annunci')
