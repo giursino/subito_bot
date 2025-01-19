@@ -75,9 +75,9 @@ def create_new_adv():
                     else:
                         value = 1
                 elif key == 'immagini':
-                    paths = askopenfilenames()
+                    paths = askopenfilenames(title="Select images", multiple=True)
                     relpath = os.path.join('resources', template['id'])
-                    os.makedirs(relpath)
+                    os.makedirs(relpath, exist_ok=True)
                     paths_new = [os.path.join(relpath, f'{id}{os.path.splitext(p)[1]}') for id, p in enumerate(paths)]
                     for src, dst in zip(paths, paths_new):
                         shutil.copyfile(src, dst)
