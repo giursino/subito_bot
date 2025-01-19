@@ -1,4 +1,8 @@
+ifdef TEST
+DOCKER_RUN = docker run -it --rm -e DISPLAY=$(DISPLAY) -v /tmp/.X11-unix:/tmp/.X11-unix -v "$(PWD)/local/resources_test:/app/resources" subito_bot
+else
 DOCKER_RUN = docker run -it --rm -e DISPLAY=$(DISPLAY) -v /tmp/.X11-unix:/tmp/.X11-unix -v "$(PWD)/local/resources:/app/resources" subito_bot
+endif
 
 build:
 	docker build -t subito_bot .

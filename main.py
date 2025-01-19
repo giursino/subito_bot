@@ -42,10 +42,9 @@ def publish() -> None:
           page3(driver)
       except Exception as e:
           traceback.print_exc()
-          input('continue with next item?')
+          input('ERROR: continue with the next item?')
 
     time.sleep(5)
-    input('exit?')
     driver.quit()
 
 def create_new_adv():
@@ -159,32 +158,32 @@ def update_advs():
     timestr = time.strftime("%Y%m%d%H%M%S")
 
     for item in items:
-        # Trova il suffisso esistente nel titolo e nella descrizione
+        # Find the existing suffix in the title and description
         existing_suffix = None
         if 'SKU:' in item['titolo']:
             existing_suffix = item['titolo'].split('SKU:')[-1].strip()
 
-        # Genera un nuovo suffisso
+        # Generate a new suffix
         suffix = generate_random_string()
 
-        # Aggiorna il titolo e la descrizione con il suffisso
+        # Update the title and description with the suffix
         item['titolo'] = f"{item['titolo'].split('SKU:')[0].strip()} SKU:{suffix}"
         item['descrizione'] = f"{item['descrizione'].split('SKU:')[0].strip()} SKU:{suffix}"
 
-        # Aggiorna le immagini con il suffisso esistente o nuovo
+        # Update the images with the existing or new suffix
         for img_path in item['immagini']:
             original_img_file = os.path.join(os.path.dirname(img_path), f"original_{os.path.basename(img_path)}")
             if not existing_suffix:
                 shutil.copyfile(img_path, original_img_file)
 
-            # Aggiungi il suffisso all'immagine e salvala
+            # Add the suffix to the image and save it
             add_text_to_image(original_img_file, img_path, suffix)
 
-    # Backup del vecchio file items
+    # Backup the old items file
     backup_items_file = os.path.join(os.path.dirname(filepath_items), f"{timestr}_{os.path.basename(filepath_items)}")
     shutil.copyfile(filepath_items, backup_items_file)
 
-    # Sovrascrivi il file items
+    # Overwrite the items file
     with open(filepath_items, 'w') as f:
         json.dump(items, f, indent=2)
 

@@ -12,7 +12,10 @@ This project helps to speed-up insertion and filling of advertisements on the we
 * Make
 
 ## Setup
-* update `resources/credentials.json` with correct credentials
+Please note, using the Docker container, the local resources are located in the `local/resources` directory and mounted to `resource` container directory.
+
+* create `local/resources` directory coping the contents of `resources` directory
+* update `credentials.json` with correct credentials
 * run `make build` to build the docker image
 
 ## Usage
@@ -34,4 +37,12 @@ Usage:
 ```sh
 pip install -r requirements.txt
 python main.py [list|add]
+```
+
+### Testing
+To run the tests with a specific resources directory `local/resources_test`:
+
+```sh
+make TEST=1 list
+...
 ```
