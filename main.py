@@ -161,23 +161,21 @@ def update_advs():
     for item in items:
         # Trova il suffisso esistente nel titolo e nella descrizione
         existing_suffix = None
-        if ' - ' in item['titolo']:
-            existing_suffix = item['titolo'].split(' - ')[-1]
+        if 'SKU:' in item['titolo']:
+            existing_suffix = item['titolo'].split('SKU:')[-1].strip()
 
         # Genera un nuovo suffisso
         suffix = generate_random_string()
 
         # Aggiorna il titolo e la descrizione con il suffisso
-        item['titolo'] = f"{item['titolo'].split(' - ')[0]} - {suffix}"
-        item['descrizione'] = f"{item['descrizione'].split(' - ')[0]} - {suffix}"
-
+        item['titolo'] = f"{item['titolo'].split('SKU:')[0].strip()} SKU:{suffix}"
+        item['descrizione'] = f"{item['descrizione'].split('SKU:')[0].strip()} SKU:{suffix}"
 
         # Aggiorna le immagini con il suffisso esistente o nuovo
         for img_path in item['immagini']:
-            
             original_img_file = os.path.join(os.path.dirname(img_path), f"original_{os.path.basename(img_path)}")
-            
-            if not existing_suffix: shutil.copyfile(img_path, original_img_file)
+            if not existing_suffix:
+                shutil.copyfile(img_path, original_img_file)
 
             # Aggiungi il suffisso all'immagine e salvala
             add_text_to_image(original_img_file, img_path, suffix)
