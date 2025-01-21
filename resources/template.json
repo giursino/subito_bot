@@ -7,6 +7,7 @@
     "titolo": "",
     "descrizione": "",
     "condizione": "",
+    "fascia_di_eta": "",
     "comune": "",
     "prezzo_listino": "",
     "prezzo": "",
@@ -15,5 +16,6 @@
     "costi_di_spedizione": "",
     "telefono": "",
     "nascondi_numero": true,
-    "inserzionista": ""
+    "inserzionista": "",
+    "pubblica_annuncio": true
 }

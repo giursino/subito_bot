@@ -32,17 +32,22 @@ def publish() -> None:
 
     cwd = os.getcwd()
     login(driver)
-    input('continue?')
+    input('press ENTER to continue')
 
     for data in items:
+      if data['pubblica_annuncio'] == False:
+          print(f'[{data["id"]}] Skipping item')
+          continue
+      
       try:
+          print(f'[{data["id"]}] Publishing item')
           data['immagini'] = [os.path.join(cwd, p) for p in data['immagini']]
           page1(driver, data)
           page2(driver)
           page3(driver)
       except Exception as e:
           traceback.print_exc()
-          input('ERROR: continue with the next item?')
+          input('ERROR: press ENTER to continue with the next item')
 
     time.sleep(5)
     driver.quit()
@@ -117,6 +122,8 @@ def create_new_adv():
                     value = True
                 elif key == 'inserzionista':
                     value = 'Privato'
+                elif key == 'pubblica_annuncio':
+                    value = True
                 else:
                     value = input(f'{key} (default: {template[key]})? ')
                     if value == '':
