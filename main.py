@@ -89,35 +89,38 @@ def create_new_adv():
                 elif key == 'tipo_di_annuncio':
                     options = ['Regalo', 'Vendita']
                     print('OPTIONS:', '\n'.join([f'{id:<5}: {t}' for id, t in enumerate(options)]), sep='\n')
-                    value = int(input(f'{key}? '))
-                    value = options[value]
+                    value = input(f'{key} (default: {options.index(template[key])})? ')
+                    if value == '': value = options.index(template[key])
+                    value = options[int(value)]
                 elif key == 'condizione':
                     options = ['Nuovo', 'ComeNuovo', 'Ottimo', 'Buono', 'Danneggiato']
                     print('OPTIONS:', '\n'.join([f'{id:<5}: {t}' for id, t in enumerate(options)]), sep='\n')
-                    value = int(input(f'{key}? '))
-                    value = options[value]
+                    value = input(f'{key} (default: {options.index(template[key])})? ')
+                    if value == '': value = options.index(template[key])
+                    value = options[int(value)]
                 elif key == 'fascia_di_eta':
                     options = ['0_12_mesi', '1_3_anni', '3_6_anni', '6_12_anni', 'altro']
                     print('OPTIONS:', '\n'.join([f'{id:<5}: {t}' for id, t in enumerate(options)]), sep='\n')
-                    value = int(input(f'{key}? '))
-                    value = options[value]
+                    value = input(f'{key} (default: {options.index(template[key])})? ')
+                    if value == '': value = options.index(template[key])
+                    value = options[int(value)]
                 elif key == 'spedizione':
                     options = ['Nessuna', 'TuttoSubito', 'GestitaDaTe']
                     print('OPTIONS:', '\n'.join([f'{id:<5}: {t}' for id, t in enumerate(options)]), sep='\n')
-                    value = input(f'{key}? ')
-                    if value == '':
-                        value = options[0]
-                    else:
-                        value = options[int(value)]
+                    value = input(f'{key} (default: {options.index(template[key])})? ')
+                    if value == '': value = options.index(template[key])
+                    value = options[int(value)]
                 elif key == 'dimensioni':
                     if template['spedizione'] == 'TuttoSubito':
                         options = ['Piccolo', 'Medio', 'Grande', 'Maxi']
                         print('OPTIONS:', '\n'.join([f'{id:<5}: {t}' for id, t in enumerate(options)]), sep='\n')
-                        value = int(input(f'{key}? '))
-                        value = options[value]
+                        value = input(f'{key} (default: {options.index(template[key])})? ')
+                        if value == '': value = options.index(template[key])
+                        value = options[int(value)]
                 elif key == 'costi_di_spedizione':
                     if template['spedizione'] == 'GestitaDaTe':
-                        value = input(f'{key}? ')
+                        value = input(f'{key} (default: {template[key]})? ')
+                        if value == '': value = template[key]
                 elif key == 'nascondi_numero':
                     value = True
                 elif key == 'inserzionista':
