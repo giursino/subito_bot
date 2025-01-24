@@ -5,52 +5,13 @@ import shutil
 import time
 import random
 import string
-import traceback
-from selenium import webdriver
-from selenium.webdriver.firefox.options import Options as FirefoxOptions
 from tkinter.filedialog import askopenfilenames
 from PIL import Image, ImageDraw, ImageFont
 
-from utils import *
+import subito
 
 filepath_items = r'resources/items.json'
 filepath_template = r'resources/template.json'
-
-def publish() -> None:
-    with open(filepath_items) as f:
-        items = json.load(f)
-    
-    # Configure Firefox options
-    firefox_options = FirefoxOptions()
-    firefox_options.add_argument("--no-sandbox")
-    user_data_dir = f"/tmp/firefox_user_data_{int(time.time())}"
-    firefox_options.set_preference("profile", user_data_dir)
-    firefox_options.set_preference("browser.in-content.dark-mode", True) 
-    driver = webdriver.Firefox(firefox_options=firefox_options)
-    driver.maximize_window()
-    driver.delete_all_cookies()
-
-    cwd = os.getcwd()
-    login(driver)
-    input('press ENTER to continue')
-
-    for data in items:
-      if data['pubblica_annuncio'] == False:
-          print(f'[{data["id"]}] Skipping item')
-          continue
-      
-      try:
-          print(f'[{data["id"]}] Publishing item')
-          data['immagini'] = [os.path.join(cwd, p) for p in data['immagini']]
-          page1(driver, data)
-          page2(driver)
-          page3(driver)
-      except Exception as e:
-          traceback.print_exc()
-          input('ERROR: press ENTER to continue with the next item')
-
-    time.sleep(5)
-    driver.quit()
 
 def create_new_adv():
     with open(filepath_items) as f:
@@ -67,11 +28,11 @@ def create_new_adv():
                 if key == 'id':
                     value = input(key + ' (unique)?: ').lower()
                 elif key == 'categoria':
-                    print('OPTIONS:', '\n'.join([f'{k:<5}: {v}' for k, v in CATEGORIES.items()]), sep='\n')
+                    print('OPTIONS:', '\n'.join([f'{k:<5}: {v}' for k, v in subito.CATEGORIES.items()]), sep='\n')
                     value = int(input(f'{key}? '))
-                    assert value in CATEGORIES
+                    assert value in subito.CATEGORIES
                 elif key == 'tipologia':
-                    options = TYPES[CATEGORIES[template['categoria']]]
+                    options = subito.TYPES[subito.CATEGORIES[template['categoria']]]
                     if len(options) > 0:
                         print('OPTIONS:', '\n'.join([f'{id:<5}: {t}' for id, t in enumerate(options)]), sep='\n')
                         value = int(input(f'{key}? '))
@@ -246,4 +207,4 @@ if __name__ == '__main__':
     elif len(sys.argv) > 1 and sys.argv[1].lower() == 'update':
         update_advs()
     else:
-        publish()
+        subito.publish(filepath_items)

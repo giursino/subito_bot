@@ -1,8 +1,13 @@
-from time import sleep
+import traceback
+import json
+import time
+import os
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
+from selenium import webdriver
+from selenium.webdriver.remote.webdriver import WebElement
+from selenium.webdriver.firefox.options import Options as FirefoxOptions
 from difflib import SequenceMatcher
-import json
 
 CATEGORIES = {
     2: "Auto",
@@ -149,15 +154,16 @@ GUI = {
 
 }
 
-def get_gui(driver, name, retry=10):
+def get_gui(driver, name, retry=10) -> WebElement:
     count = 0
     while count < retry:
-        sleep(0.5)
+        time.sleep(0.5)
         count += 1
         try:
             return GUI[name](driver)
         except:
             pass
+    raise Exception(f"Element {name} not found")
     
 def type_text(driver, name, text):
     ui = get_gui(driver, name)
@@ -166,7 +172,7 @@ def type_text(driver, name, text):
         ui.click()
         ui.clear()
         ui.send_keys(text)
-        sleep(1)
+        time.sleep(1)
 
 def login(driver):
     # Load session cookie if it exists
@@ -204,7 +210,7 @@ def login(driver):
     type_text(driver, 'email', credentials['EMAIL'])
     type_text(driver, 'password', credentials['PASSWORD'])
     get_gui(driver, 'accedi').click()
-    sleep(1)
+    time.sleep(1)
     print(f"Login successful with credentials")
     
     # Save session cookies
@@ -260,3 +266,39 @@ def page2(driver):
 
 def page3(driver):
     get_gui(driver, 'page3_continua').click()
+
+def publish(filepath_items) -> None:
+    with open(filepath_items) as f:
+        items = json.load(f)
+    
+    # Configure Firefox options
+    firefox_options = FirefoxOptions()
+    firefox_options.add_argument("--no-sandbox")
+    user_data_dir = f"/tmp/firefox_user_data_{int(time.time())}"
+    firefox_options.set_preference("profile", user_data_dir)
+    firefox_options.set_preference("browser.in-content.dark-mode", True) 
+    driver = webdriver.Firefox(firefox_options=firefox_options)
+    driver.maximize_window()
+    driver.delete_all_cookies()
+
+    cwd = os.getcwd()
+    login(driver)
+    input('press ENTER to continue')
+
+    for data in items:
+      if data['pubblica_annuncio'] == False:
+          print(f'[{data["id"]}] Skipping item')
+          continue
+      
+      try:
+          print(f'[{data["id"]}] Publishing item')
+          data['immagini'] = [os.path.join(cwd, p) for p in data['immagini']]
+          page1(driver, data)
+          page2(driver)
+          page3(driver)
+      except Exception as e:
+          traceback.print_exc()
+          input('ERROR: press ENTER to continue with the next item')
+
+    time.sleep(5)
+    driver.quit()
