@@ -79,7 +79,7 @@ def create_new_adv():
                     else:
                         value = 1
                 elif key == 'immagini':
-                    paths = askopenfilenames(title="Select images", multiple=True)
+                    paths = askopenfilenames(title="Select images")
                     relpath = os.path.join('resources', template['id'])
                     os.makedirs(relpath, exist_ok=True)
                     paths_new = [os.path.join(relpath, f'{id}{os.path.splitext(p)[1]}') for id, p in enumerate(paths)]
@@ -220,8 +220,8 @@ def add_text_to_image(input_image_path, output_image_path, text):
 
   # Randomize the position ensuring the text does not go out of the image
   # and is either at the top or bottom of the image, not in the center 80%
-  y_positions = list(range(0, int(height * 0.20))) + list(range(int(height * 0.80), height - textheight))
-  x = random.randint(0, width - textwidth)
+  y_positions = list(range(0, int(height * 0.20))) + list(range(int(height * 0.80), int(height - textheight)))
+  x = random.randint(0, int(width - textwidth))
   y = random.choice(y_positions)
 
   # Draw the text with a shadow (emboss effect)
