@@ -36,7 +36,8 @@
     },
 
     "mounts": [
-      "source=${localWorkspaceFolder}/local/resources,target=/app/resources,type=bind"
+      "source=${localEnv:HOME}/.gitconfig.local,target=/root/.gitconfig.local,type=bind,readonly",
+      "source=${localWorkspaceFolder}/local/resources_test,target=${containerWorkspaceFolder}/resources,type=bind"
     ]
 
     // Uncomment to connect as an existing user other than the container default. More info: https://aka.ms/dev-containers-non-root.
