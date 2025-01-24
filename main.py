@@ -9,6 +9,7 @@ from tkinter.filedialog import askopenfilenames
 from PIL import Image, ImageDraw, ImageFont
 
 import subito
+#import fb
 
 filepath_items = r'resources/items.json'
 filepath_template = r'resources/template.json'
@@ -199,12 +200,41 @@ def add_text_to_image(input_image_path, output_image_path, text):
   # Save the image in JPEG format
   watermarked.save(output_image_path, format='JPEG')
 
+
 if __name__ == '__main__':
-    if len(sys.argv) > 1 and sys.argv[1].lower() == 'add':
-        create_new_adv()
-    elif len(sys.argv) > 1 and sys.argv[1].lower() == 'list':
-        list_advs()
-    elif len(sys.argv) > 1 and sys.argv[1].lower() == 'update':
-        update_advs()
-    else:
+
+  def print_help():
+    print("Usage: python main.py [options] [command]")
+    print("Options:")
+    print("  --help, -h    Show this help message")
+    print("Commands:")
+    print("  add                Create a new advertisement")
+    print("  list               List all advertisements")
+    print("  update             Update advertisements with a new SKU")
+    print("  publish PLATFORM   Publish advertisements to a platform")
+    print("Platforms:")
+    print("  subito             Publish to Subito")
+    print("  fb                 Publish to Facebook")
+
+  if len(sys.argv) > 1:
+    command = sys.argv[1].lower()
+    if command in ['--help', '-h']: print_help()
+    elif command == 'add': create_new_adv()
+    elif command == 'list': list_advs()
+    elif command == 'update': update_advs()
+    elif command == 'publish' and len(sys.argv) > 2:
+      platform = sys.argv[2].lower()
+      if platform == 'subito':
         subito.publish(filepath_items)
+      elif platform == 'fb':
+        print("ERROR: no yet supported.")
+        #fb.publish(filepath_items)
+      else:
+        print("ERROR: Unknown platform.")
+        print_help()
+    else:
+      print("ERROR: Unknown command.")
+      print_help()
+  else:
+    print("ERROR: No command provided.")
+    print_help()
