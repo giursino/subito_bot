@@ -178,12 +178,13 @@ def login(driver):
     # Load session cookie if it exists
     cookie_file = r'resources/cookie.json'
     credentials_file = r'resources/credentials.json'
-    
+    url = 'https://areariservata.subito.it/login_form'
+
     first_access = True
     try:
       with open(cookie_file, 'r') as f:
         cookies = json.load(f)
-        driver.get('https://areariservata.subito.it/login_form')
+        driver.get(url)
         for cookie in cookies:
           driver.add_cookie(cookie)
         driver.refresh()
@@ -201,7 +202,7 @@ def login(driver):
     with open(credentials_file, 'r') as f:
       credentials = json.load(f)
 
-    driver.get('https://areariservata.subito.it/login_form')
+    driver.get(url)
     
     # Answer to cookies policy
     if first_access:

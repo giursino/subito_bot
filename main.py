@@ -9,7 +9,7 @@ from tkinter.filedialog import askopenfilenames
 from PIL import Image, ImageDraw, ImageFont
 
 import subito
-#import fb
+import fb
 
 filepath_items = r'resources/items.json'
 filepath_template = r'resources/template.json'
@@ -227,8 +227,7 @@ if __name__ == '__main__':
       if platform == 'subito':
         subito.publish(filepath_items)
       elif platform == 'fb':
-        print("ERROR: no yet supported.")
-        #fb.publish(filepath_items)
+        fb.publish(filepath_items)
       else:
         print("ERROR: Unknown platform.")
         print_help()
