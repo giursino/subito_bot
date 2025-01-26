@@ -130,26 +130,31 @@ def update_advs():
     timestr = time.strftime("%Y%m%d%H%M%S")
 
     for item in items:
-        # Find the existing suffix in the title and description
-        existing_suffix = None
-        if 'SKU:' in item['titolo']:
-            existing_suffix = item['titolo'].split('SKU:')[-1].strip()
+        # Check if the SKU key exists in the item and is not an empty string
+        existing_sku = 'sku' in item and item['sku'] != ''
 
-        # Generate a new suffix
-        suffix = generate_random_string()
+        # Generate a new sku
+        sku = generate_random_string()
 
-        # Update the title and description with the suffix
-        item['titolo'] = f"{item['titolo'].split('SKU:')[0].strip()} SKU:{suffix}"
-        item['descrizione'] = f"{item['descrizione'].split('SKU:')[0].strip()} SKU:{suffix}"
+        # Backup the original title and description
+        if not existing_sku:
+            item['titolo_originale'] = item['titolo']
+            item['descrizione_originale'] = item['descrizione']
 
-        # Update the images with the existing or new suffix
+        # Update the title and description with the original price and sku
+        original_price = f"\nPrezzo nuovo: {item['prezzo_listino']} €" if 'prezzo_listino' in item else ""
+        item['titolo'] = f"{item['titolo_originale']} SKU:{sku}"
+        item['descrizione'] = f"{item['descrizione_originale']}{original_price}\nSKU:{sku}"
+        item['sku'] = sku
+
+        # Update the images with the existing or new sku
         for img_path in item['immagini']:
             original_img_file = os.path.join(os.path.dirname(img_path), f"original_{os.path.basename(img_path)}")
-            if not existing_suffix:
+            if not existing_sku:
                 shutil.copyfile(img_path, original_img_file)
 
             # Add the suffix to the image and save it
-            add_text_to_image(original_img_file, img_path, suffix)
+            add_text_to_image(original_img_file, img_path, sku)
 
     # Backup the old items file
     backup_items_file = os.path.join(os.path.dirname(filepath_items), f"{timestr}_{os.path.basename(filepath_items)}")
@@ -159,6 +164,34 @@ def update_advs():
     with open(filepath_items, 'w') as f:
         json.dump(items, f, indent=2)
 
+def restore_advs():
+  with open(filepath_items) as f:
+    items = json.load(f)
+
+  for item in items:
+    if 'titolo_originale' in item and 'descrizione_originale' in item:
+      item['titolo'] = item['titolo_originale']
+      item['descrizione'] = item['descrizione_originale']
+      del item['titolo_originale']
+      del item['descrizione_originale']
+    if 'sku' in item:
+      del item['sku']
+
+    # Restore original images
+    for img_path in item['immagini']:
+      original_img_file = os.path.join(os.path.dirname(img_path), f"original_{os.path.basename(img_path)}")
+      if os.path.exists(original_img_file):
+        shutil.copyfile(original_img_file, img_path)
+        os.remove(original_img_file)
+
+  # Backup the old items file
+  timestr = time.strftime("%Y%m%d%H%M%S")
+  backup_items_file = os.path.join(os.path.dirname(filepath_items), f"{timestr}_{os.path.basename(filepath_items)}")
+  shutil.copyfile(filepath_items, backup_items_file)
+
+  # Overwrite the items file
+  with open(filepath_items, 'w') as f:
+    json.dump(items, f, indent=2)
 
 def add_text_to_image(input_image_path, output_image_path, text):
   image = Image.open(input_image_path).convert("RGBA")
@@ -211,6 +244,7 @@ if __name__ == '__main__':
     print("  add                Create a new advertisement")
     print("  list               List all advertisements")
     print("  update             Update advertisements with a new SKU")
+    print("  restore            Restore advertisements to original state")
     print("  publish PLATFORM   Publish advertisements to a platform")
     print("Platforms:")
     print("  subito             Publish to Subito")
@@ -222,6 +256,7 @@ if __name__ == '__main__':
     elif command == 'add': create_new_adv()
     elif command == 'list': list_advs()
     elif command == 'update': update_advs()
+    elif command == 'restore': restore_advs()
     elif command == 'publish' and len(sys.argv) > 2:
       platform = sys.argv[2].lower()
       if platform == 'subito':

@@ -176,8 +176,8 @@ def type_text(driver, name, text):
 
 def login(driver):
     # Load session cookie if it exists
-    cookie_file = r'resources/cookie.json'
-    credentials_file = r'resources/credentials.json'
+    cookie_file = r'resources/cookie_subito.json'
+    credentials_file = r'resources/credentials_subito.json'
     url = 'https://areariservata.subito.it/login_form'
 
     first_access = True

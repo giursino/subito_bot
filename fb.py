@@ -120,8 +120,8 @@ def type_text(driver, name, text):
 
 def login(driver):
     # Load session cookie if it exists
-    cookie_file = r'resources/fb_cookie.json'
-    credentials_file = r'resources/fb_credentials.json'
+    cookie_file = r'resources/cookie_fb.json'
+    credentials_file = r'resources/credentials_fb.json'
     url = 'https://www.facebook.com/marketplace/'
     
     first_access = True
