@@ -6,6 +6,7 @@ from typing import List, Union
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium import webdriver
+from selenium.webdriver.firefox.webdriver import WebDriver
 from selenium.webdriver.remote.webdriver import WebElement
 from selenium.webdriver.firefox.options import Options as FirefoxOptions
 from difflib import SequenceMatcher
@@ -212,11 +213,7 @@ def page1(driver, data):
 def page2(driver):
     get_gui(driver, 'pubblica').click()
 
-def publish(filepath_items) -> None:
-    with open(filepath_items) as f:
-        items = json.load(f)
-    
-    # Configure Firefox options
+def setup()  -> WebDriver:
     firefox_options = FirefoxOptions()
     firefox_options.add_argument("--no-sandbox")
     user_data_dir = f"/tmp/firefox_user_data_{int(time.time())}"
@@ -225,8 +222,15 @@ def publish(filepath_items) -> None:
     driver = webdriver.Firefox(firefox_options=firefox_options)
     driver.maximize_window()
     driver.delete_all_cookies()
+    return driver
 
+def publish(filepath_items) -> None:
+    with open(filepath_items) as f:
+        items = json.load(f)
+    
+    driver = setup()
     cwd = os.getcwd()
+
     login(driver)
     input('press ENTER to continue')
 
