@@ -23,6 +23,7 @@
         "vscode": {
             "extensions": [
                 "ms-python.python",
+                "GitHub.copilot",
                 "ms-python.vscode-pylance",
                 "ms-azuretools.vscode-docker"
             ],

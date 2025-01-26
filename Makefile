@@ -7,8 +7,11 @@ endif
 build:
 	docker build -t subito_bot .
 
-publish:
-	$(DOCKER_RUN) python main.py
+publish-subito:
+	$(DOCKER_RUN) python main.py publish subito
+
+publish-fb:
+	$(DOCKER_RUN) python main.py publish fb
 
 list:
 	$(DOCKER_RUN) python main.py list
@@ -18,6 +21,9 @@ add:
 
 update:
 	$(DOCKER_RUN) python main.py update
+
+restore:
+	$(DOCKER_RUN) python main.py restore
 
 shell:
 	$(DOCKER_RUN) zsh
