@@ -113,11 +113,19 @@ def create_new_adv():
         json.dump(items, f, indent=2)
 
 def list_advs():
-    with open(filepath_items) as f:
-        items = json.load(f)
+  with open(filepath_items) as f:
+    items = json.load(f)
 
-    for idx, item in enumerate(items):
-        print(f'{idx :<3}: [{item["id"]}] {item["titolo"]}')
+  active_items = [item for item in items if item.get("pubblica_annuncio", True)]
+  inactive_items = [item for item in items if item.get("pubblica_annuncio", False)]
+
+  print("Publishable Advertisements:")
+  for idx, item in enumerate(active_items):
+    print(f'- {item["id"] :<15}: {item["titolo"]}')
+
+  print("\nUnpublishable Advertisements:")
+  for idx, item in enumerate(inactive_items):
+    print(f'- {item["id"] :<15}: {item["titolo"]}')
 
 def update_advs():
     with open(filepath_items) as f:
