@@ -111,12 +111,14 @@ def get_guis(driver, name, retry=10) -> List[WebElement]:
     
 def type_text(driver, name, text):
     ui = get_gui(driver, name)
+
     # check string similarity
-    while SequenceMatcher(None, ui.get_attribute("value").strip().lower(), text.strip().lower()).ratio() < 0.7:
-        ui.click()
-        ui.clear()
-        ui.send_keys(text)
-        time.sleep(1)
+    while SequenceMatcher(None, ui.get_attribute("value").replace('€', '').strip().lower(), text.replace('€', '').strip().lower()).ratio() < 0.7:
+      print(f"Comparing {ui.get_attribute("value").replace('€', '').strip().lower()} with  {text.replace('€', '').strip().lower()}")
+      ui.click()
+      ui.clear()
+      ui.send_keys(text)
+      time.sleep(1)
 
 def login(driver):
     # Load session cookie if it exists
@@ -165,7 +167,6 @@ def login(driver):
       json.dump(cookies, f)
 
 def page1(driver, data):
-    get_gui(driver, 'marketplace')
     driver.get(f'https://www.facebook.com/marketplace/create/item')
 
     type_text(driver, 'titolo', data['titolo'])
@@ -234,15 +235,17 @@ def publish(filepath_items) -> None:
     login(driver)
     input('press ENTER to continue')
 
-    for data in items:
-      if data['pubblica_annuncio'] == False:
-          print(f'[{data["id"]}] Skipping item')
+    get_gui(driver, 'marketplace')
+
+    for item in items:
+      if item['pubblica_annuncio'] == False:
+          print(f'[{item["id"]}] Skipping item')
           continue
       
       try:
-          print(f'[{data["id"]}] Publishing item')
-          data['immagini'] = [os.path.join(cwd, p) for p in data['immagini']]
-          page1(driver, data)
+          print(f'[{item["id"]}] Publishing item')
+          item['immagini'] = [os.path.join(cwd, p) for p in item['immagini']]
+          page1(driver, item)
           page2(driver)
       except Exception as e:
           traceback.print_exc()
