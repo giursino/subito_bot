@@ -29,11 +29,14 @@ Please note, using the Docker container, the local resources are located in the 
 
 ## Development
 
-To enter on container shell:
+### Local Development Method
+This method allows you to develop and test the project directly on your machine, using your preferred tools and environment. Follow the steps in the **Setup** section and use the provided Make commands for development and publishing tasks. For advanced needs or to ensure consistency with the production environment, you can enter an interactive shell inside the running Docker container with:
 
 ```sh
 make shell
 ```
+
+This gives you access to the same environment as your application for debugging, manual testing, or experimenting. Remember that changes inside the container persist only for that session unless you use mounted volumes to sync files with your host.
 
 Usage:
 
@@ -49,6 +52,21 @@ To run the tests with a specific resources directory `local/resources_test`:
 make TEST=1 list
 ...
 ```
+
+### Dev Container with Visual Studio Code
+
+For easier and reproducible development, this project includes configuration for using a **Dev Container** with [Visual Studio Code](https://code.visualstudio.com/) and the [Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers).
+
+#### Getting Started
+
+1. Make sure you have Docker and Visual Studio Code installed.
+2. Install the **Dev Containers** extension in Visual Studio Code.
+3. Open the project folder in Visual Studio Code.
+4. When prompted, select **"Reopen in Container"** to start the isolated development environment.
+
+This environment comes pre-configured with all dependencies required for development and testing.
+
+For more details, see the official [Dev Containers documentation](https://code.visualstudio.com/docs/devcontainers/containers).
 
 ## Credits
 
