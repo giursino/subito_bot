@@ -32,14 +32,14 @@ CATEGORIES = {
     15: "Giardino e Fai da te",
     16: "Abbigliamento e Accessori",
     17: "Neonati e bambini", # Tutto per i bambini",
-    18: "Sports e hobby",
+    18: "Sport e attività all'aperto", # Sports e hobby",
     23: "Animali",
     100: "Accessori per animali",
     19: "Musica e Film",
     38: "Libri e Riviste",
     39: "Strumenti Musicali",
-    20: "Sports",
-    41: "Biciclette",
+    20: "Sport e attività all'aperto",  # "Sports",
+    41: "Biciclette", # Biciclette
     21: "Collezionismo",
     28: "Altri",
     7: "Appartamenti",
@@ -68,13 +68,13 @@ GUI = {
 
     # PAGE1
     'immagini':                 lambda d: d.find_element_by_css_selector('input[type="file"]'),
-    'titolo':                   lambda d: d.find_element(By.XPATH, "//label[@aria-label='Titolo']/div/input"),
-    'prezzo':                   lambda d: d.find_element(By.XPATH, "//label[@aria-label='Prezzo']/div/input"),
-    'categoria':                lambda d: d.find_element(By.XPATH, "//label[contains(@aria-label,'Categoria')]"),
+    'titolo':                   lambda d: d.find_element(By.XPATH, "//span[text()='Titolo']/following::input[@type='text']"),
+    'prezzo':                   lambda d: d.find_element(By.XPATH, "//span[text()='Prezzo']/following::input[@type='text']"),
+    'categoria':                lambda d: d.find_element(By.XPATH, "//span[text()='Categoria']/.."),
     'categorie':                lambda d: d.find_elements(By.XPATH, "//div[contains(@role,'button')]"),
-    'descrizione':              lambda d: d.find_element(By.XPATH, "//label[@aria-label='Descrizione']/div/div/textarea"),
-    'comune':                   lambda d: d.find_element(By.XPATH, "//label[@aria-label='Luogo']/div/input"),
-    'condizione':               lambda d: d.find_element(By.XPATH, "//label[@aria-label='Condizione']"),
+    'descrizione':              lambda d: d.find_element(By.XPATH, "//span[text()='Descrizione']/following::textarea"),
+    'comune':                   lambda d: d.find_element(By.XPATH, "//span[text()='Luogo']/following::input[@type='text']"),
+    'condizione':               lambda d: d.find_element(By.XPATH, "//span[text()='Condizione']/.."),
     'condizione_Nuovo':         lambda d: d.find_element(By.XPATH, "//span[text()='Nuovo']"),
     'condizione_ComeNuovo':     lambda d: d.find_element(By.XPATH, "//span[text()='Usato - Come nuovo']"),
     'condizione_Ottimo':        lambda d: d.find_element(By.XPATH, "//span[text()='Usato - Come nuovo']"),
@@ -169,6 +169,8 @@ def login(driver):
 def page1(driver, data):
     driver.get(f'https://www.facebook.com/marketplace/create/item')
 
+    get_gui(driver, 'immagini').send_keys('\n'.join(data['immagini']))
+
     type_text(driver, 'titolo', data['titolo'])
 
     if data['prezzo'] is None:
@@ -176,15 +178,14 @@ def page1(driver, data):
     else:
         type_text(driver, 'prezzo', data['prezzo'])
 
-    get_gui(driver, 'immagini').send_keys('\n'.join(data['immagini']))
-
-
     # category
     get_gui(driver, 'categoria').click()
     category_selected = False
     for elem in get_guis(driver, 'categorie'):
         try:
-            if str(elem.text.strip()).lower() == CATEGORIES[data['categoria']].strip().lower():
+            for elem_child in elem.find_elements(By.XPATH, ".//span"):
+              if elem_child.text.strip().lower() == CATEGORIES[data['categoria']].strip().lower():
+                print(f"Selected category: {CATEGORIES[data['categoria']].strip().lower()}")
                 elem.click()
                 category_selected = True
                 break
@@ -233,7 +234,7 @@ def publish(filepath_items) -> None:
     cwd = os.getcwd()
 
     login(driver)
-    input('press ENTER to continue')
+    #input('press ENTER to continue')
 
     get_gui(driver, 'marketplace')
 

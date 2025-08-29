@@ -66,6 +66,8 @@ For easier and reproducible development, this project includes configuration for
 
 This environment comes pre-configured with all dependencies required for development and testing.
 
+To exit from the Dev Container, simply `Ctrl+Shift+P` and select **"Dev Containers: Reopen Folder in WSL"**.
+
 For more details, see the official [Dev Containers documentation](https://code.visualstudio.com/docs/devcontainers/containers).
 
 ## Credits
