@@ -10,7 +10,14 @@ RUN apt-get update && apt-get install -y \
   silversearcher-ag \
   exuberant-ctags \
   fonts-powerline
-  
+
+# Aggiorna i certificati CA per funzionare con Kaspersky aziendale
+# Estrae il certificato root Kaspersky dalla connessione a github.com e lo importa tra le CA di sistema
+RUN apt-get update && apt-get install -y openssl ca-certificates && \
+  echo | openssl s_client -showcerts -connect github.com:443 2>/dev/null | \
+  awk '/-----BEGIN CERTIFICATE-----/,/-----END CERTIFICATE-----/ {print $0}' > /usr/local/share/ca-certificates/kaspersky.crt && \
+  update-ca-certificates
+
 # Clona il repository dotfiles e installa
 RUN git clone https://github.com/giursino/dotfiles.git /root/dotfiles && \
   cd /root/dotfiles && \
