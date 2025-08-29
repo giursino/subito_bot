@@ -116,8 +116,8 @@ def list_advs():
   with open(filepath_items) as f:
     items = json.load(f)
 
-  active_items = [item for item in items if item.get("pubblica_annuncio", True)]
-  inactive_items = [item for item in items if item.get("pubblica_annuncio", False)]
+  active_items = [item for item in items if item.get("pubblica_annuncio") is True]
+  inactive_items = [item for item in items if item.get("pubblica_annuncio") is False]
 
   print("Publishable Advertisements:")
   for idx, item in enumerate(active_items):
