@@ -110,7 +110,7 @@ GUI = {
     'email':                  lambda d: d.find_element(By.ID, 'username'),
     'password':               lambda d: d.find_element(By.ID, 'password'),
     'accedi':                 lambda d: d.find_elements(By.XPATH, '//button[@type="submit"]')[0],
-    'i_tuoi_annunci':         lambda d: d.find_elements(By.XPATH, '//*[@id="__next"]/div/main/div[2]/ul/li[1]/a/span')[0], 
+    'i_tuoi_annunci':         lambda d: d.find_elements(By.XPATH, '//span[text()="I tuoi annunci"]')[0], 
 
     # PAGE1
     'immagini':                 lambda d: d.find_element(By.ID, 'file-input'),
@@ -119,7 +119,7 @@ GUI = {
     'titolo':                   lambda d: d.find_element(By.ID, 'title'),
     'descrizione':              lambda d: d.find_element(By.ID, 'description'),
     'comune':                   lambda d: d.find_element(By.ID, 'location'),
-    'condizione':               lambda d: d.find_elements_by_xpath('//*[@id="__next"]/div/main/div[2]/form/div/section[5]/div[2]/div/div/div/div')[0],
+    'condizione':               lambda d: d.find_elements_by_xpath('//label[text()="Condizione"]/following::div[contains(@role,"listbox")]')[0],
     'condizione_Nuovo':         lambda d: d.find_elements_by_xpath('//*[@id="itemCondition__option--0"]')[0],
     'condizione_ComeNuovo':     lambda d: d.find_elements_by_xpath('//*[@id="itemCondition__option--1"]')[0],
     'condizione_Ottimo':        lambda d: d.find_elements_by_xpath('//*[@id="itemCondition__option--2"]')[0],
@@ -127,19 +127,19 @@ GUI = {
     'condizione_Danneggiato':   lambda d: d.find_elements_by_xpath('//*[@id="itemCondition__option--4"]')[0],
     'prezzo':                   lambda d: d.find_element(By.ID, 'price'),
     'spedizione':               lambda d: d.find_element(By.ID, 'itemShippable'),
-    'spedizione_TuttoSubito':   lambda d: d.find_elements_by_xpath('//label[@aria-label="Spedizione con TuttoSubito"]/div[@class="ListItemRadio_radio__eriFK"]')[0],
+    'spedizione_TuttoSubito':   lambda d: d.find_elements_by_xpath('//label[@aria-label="Spedizione con TuttoSubito"]')[0],
     'spedizione_Piccolo':       lambda d: d.find_elements_by_xpath('//label[@aria-label="Piccolo (Massimo 2kg)"]')[0],
     'spedizione_Medio':         lambda d: d.find_elements_by_xpath('//label[@aria-label="Medio (Massimo 5kg)"]')[0],
     'spedizione_Grande':        lambda d: d.find_elements_by_xpath('//label[@aria-label="Grande (Massimo 15kg)"]')[0],
     'spedizione_Maxi':          lambda d: d.find_elements_by_xpath('//label[@aria-label="Maxi (Massimo 20kg)"]')[0],
-    'spedizione_GestitaDaTe':   lambda d: d.find_elements_by_xpath('//label[@aria-label="Spedizione gestita da te (pacchi ingombranti)"]/div[@class="ListItemRadio_radio__eriFK"]')[0],
+    'spedizione_GestitaDaTe':   lambda d: d.find_elements_by_xpath('//label[@aria-label="Spedizione gestita da te (pacchi ingombranti)"]')[0],
     'costi_di_spedizione':      lambda d: d.find_element(By.ID, 'itemShippingCost'),
     'telefono':                 lambda d: d.find_element(By.ID, 'phone'),
     'nascondi_numero':          lambda d: d.find_element(By.ID, 'phoneHidden'),
     'inserzionista_Privato':    lambda d: d.find_elements_by_xpath('//label[text()="Privato"]')[0],
     'inserzionista_Azienda':    lambda d: d.find_elements_by_xpath('//label[text()="Azienda"]')[0],
-    'continua':                 lambda d: d.find_elements_by_xpath('//*[@id="__next"]/div/main/div[2]/form/section/button')[0],
-    'fascia_di_eta':            lambda d: d.find_elements_by_xpath('//body/div[@id="__next"]/div[@class="Layout_layout__fOhwR"]/main[@class="Layout_main__Ybyix"]/div[@class="Form_form-wrapper__Ue0H5"]/form[@aria-label="form"]/div[@class="Form_inputs-wrapper__1fBgX"]/section[7]/div[2]/div[1]/div[1]/div[1]/div[1]')[0],
+    'continua':                 lambda d: d.find_elements_by_xpath('//button[text()="Continua"]')[0],
+    'fascia_di_eta':            lambda d: d.find_elements_by_xpath('//label[text()="Fascia di età"]/following::div[contains(@role,"listbox")]')[0],
     'fascia_di_eta_0_12_mesi':  lambda d: d.find_elements_by_xpath('//*[@id="childrenAge__option--0"]')[0],
     'fascia_di_eta_1_3_anni':   lambda d: d.find_elements_by_xpath('//*[@id="childrenAge__option--1"]')[0],
     'fascia_di_eta_3_6_anni':   lambda d: d.find_elements_by_xpath('//*[@id="childrenAge__option--2"]')[0],
@@ -284,7 +284,7 @@ def publish(filepath_items) -> None:
 
     cwd = os.getcwd()
     login(driver)
-    input('press ENTER to continue')
+    #input('press ENTER to continue')
 
     for data in items:
       if data['pubblica_annuncio'] == False:
