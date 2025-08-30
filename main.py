@@ -61,11 +61,12 @@ def create_new_adv():
                     if value == '': value = options.index(template[key])
                     value = options[int(value)]
                 elif key == 'fascia_di_eta':
-                    options = ['0_12_mesi', '1_3_anni', '3_6_anni', '6_12_anni', 'altro']
-                    print('OPTIONS:', '\n'.join([f'{id:<5}: {t}' for id, t in enumerate(options)]), sep='\n')
-                    value = input(f'{key} (default: {options.index(template[key])})? ')
-                    if value == '': value = options.index(template[key])
-                    value = options[int(value)]
+                    if subito.CATEGORIES[template['categoria']] == "Tutto per i bambini":
+                      options = ['0_12_mesi', '1_3_anni', '3_6_anni', '6_12_anni', 'altro']
+                      print('OPTIONS:', '\n'.join([f'{id:<5}: {t}' for id, t in enumerate(options)]), sep='\n')
+                      value = input(f'{key} (default: {options.index(template[key])})? ')
+                      if value == '': value = options.index(template[key])
+                      value = options[int(value)]
                 elif key == 'spedizione':
                     options = ['Nessuna', 'TuttoSubito', 'GestitaDaTe']
                     print('OPTIONS:', '\n'.join([f'{id:<5}: {t}' for id, t in enumerate(options)]), sep='\n')
