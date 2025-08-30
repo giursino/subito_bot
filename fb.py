@@ -12,6 +12,7 @@ from selenium.webdriver.firefox.options import Options as FirefoxOptions
 from difflib import SequenceMatcher
 
 CATEGORIES = {
+    # On comment there are Facebook categories mapped to Subito categories
     2: "Veicoli", # Auto
     5: "Veicoli", # Accessori Auto
     3: "Veicoli", # Moto e Scooter",
@@ -25,7 +26,7 @@ CATEGORIES = {
     44: "Videogiochi", #"Console e Videogiochi",
     11: "Audio/Video",
     40: "Fotografia",
-    12: "Telefonia",
+    12: "Cellulari", # Telefonia",
     13: "Per la casa e la persona",
     14: "Arredamento e Casalinghi",
     37: "Elettrodomestici",
