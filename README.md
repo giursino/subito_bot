@@ -20,8 +20,8 @@ Please note, using the Docker container, the local resources are located in the 
 * run `make build` to build the docker image
 
 ## Usage
-* run `make list` to see the items to publish to subito.it
-* run `make add` to add items to the list to publish to subito.it
+* run `make list` to see the items to publish to advertisement platforms
+* run `make add` to add items to the list to publish to advertisement platforms
 * run `make update` to update items and images on the list
 * run `make restore` to restore items and images to original state
 * run `make publish-subito` to publish the items list to subito.it 
