@@ -22,6 +22,7 @@ Please note, using the Docker container, the local resources are located in the 
 ## Usage
 * run `make list` to see the items to publish to advertisement platforms
 * run `make add` to add items to the list to publish to advertisement platforms
+* run `make remove-unpub` to remove all unpublishable items from the list
 * run `make update` to update items and images on the list
 * run `make restore` to restore items and images to original state
 * run `make publish-subito` to publish the items list to subito.it 
