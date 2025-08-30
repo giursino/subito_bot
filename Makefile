@@ -22,6 +22,9 @@ add: ## Create a new advertisement
 update: ## Update advertisements with a new SKU
 	$(DOCKER_RUN) python main.py update
 
+remove-unpub: ## Remove all unpublishable advertisements from the list
+	$(DOCKER_RUN) python main.py remove_unpub
+
 restore: ## Restore advertisements to original state
 	$(DOCKER_RUN) python main.py restore
 

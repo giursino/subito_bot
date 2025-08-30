@@ -201,6 +201,41 @@ def restore_advs():
   with open(filepath_items, 'w') as f:
     json.dump(items, f, indent=2)
 
+def remove_unpublishable_advs():
+    with open(filepath_items) as f:
+        items = json.load(f)
+
+    # Mostra gli item attuali
+    list_advs()
+
+    # Trova gli item non pubblicabili
+    to_remove = [item for item in items if item.get("pubblica_annuncio") is False]
+    
+    if not to_remove:
+        print("No items to remove.")
+        return
+
+    print("The unpublished items will be removed.")
+
+    confirm = input("Are you sure you want to remove these items? (y/n): ")
+    if confirm.lower() != 'y':
+        print("Operation cancelled.")
+        return
+
+    # Backup del file originale
+    timestr = time.strftime("%Y%m%d%H%M%S")
+    backup_items_file = os.path.join(os.path.dirname(filepath_items), f"{timestr}_{os.path.basename(filepath_items)}")
+    shutil.copyfile(filepath_items, backup_items_file)
+
+    # Crea una nuova lista senza gli item non pubblicabili
+    items = [item for item in items if item.get("pubblica_annuncio") is True]
+
+    # Sovrascrivi il file
+    with open(filepath_items, 'w') as f:
+        json.dump(items, f, indent=2)
+
+    print(f"Removed {len(to_remove)} items. Backup created at {backup_items_file}")
+
 def add_text_to_image(input_image_path, output_image_path, text):
   image = Image.open(input_image_path).convert("RGBA")
   txt = Image.new("RGBA", image.size, (255, 255, 255, 0))
@@ -253,6 +288,7 @@ if __name__ == '__main__':
     print("  list               List all advertisements")
     print("  update             Update advertisements with a new SKU")
     print("  restore            Restore advertisements to original state")
+    print("  remove_unpub       Remove all unpublishable advertisements from the list")
     print("  publish PLATFORM   Publish advertisements to a platform")
     print("Platforms:")
     print("  subito             Publish to Subito")
@@ -265,6 +301,7 @@ if __name__ == '__main__':
     elif command == 'list': list_advs()
     elif command == 'update': update_advs()
     elif command == 'restore': restore_advs()
+    elif command == 'remove_unpub': remove_unpublishable_advs()
     elif command == 'publish' and len(sys.argv) > 2:
       platform = sys.argv[2].lower()
       if platform == 'subito':
